@@ -1,10 +1,10 @@
 <img src="https://raw.githubusercontent.com/KamiSushii/SushiMusic/main/logo.png" alt="beat-logo" width="15%" align="right">
 
 # SushiMusic
-**SushiMusic** is a Pycord rewrite of [**Beat**](https://github.com/Knedme/Beat) by [Knedme](https://github.com/Knedme). (Don't expect too much, im a junior programmer)
+**SushiMusic** is a Pycord rewrite of [**Beat**](https://github.com/Knedme/Beat) by [Knedme](https://github.com/Knedme).
 
 ## 🌌 Current Version
-Current bot version is **1.0**.
+Current bot version is **1.0.1**.
 
 ## 📚 Commands
 
