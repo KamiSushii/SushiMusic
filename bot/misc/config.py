@@ -12,6 +12,6 @@ class Config(abc.ABC):
     }
 
     BOT_NAME = 'SushiMusic'
-    BOT_VERSION = '1.0'
+    BOT_VERSION = '1.0.1'
     BOT_LOGO_URL = 'https://raw.githubusercontent.com/KamiSushii/SushiMusic/main/logo.png'
     EMBED_COLOR = discord.Colour.lighter_gray()

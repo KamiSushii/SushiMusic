@@ -6,8 +6,7 @@ from bot.misc import Config, SpotifyWrapper
 
 class SushiMusic(Bot):
     def __init__(self):
-        intents = Intents.all()
-        super().__init__(intents=intents)
+        super().__init__(intents=Intents.all())
 
     def run(self):
         print("[*] Starting bot")

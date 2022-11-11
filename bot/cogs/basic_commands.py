@@ -38,7 +38,7 @@ class BasicCommandsCog(Cog):
         embed.add_field(name='/resume', value='Resumes current song if it is paused.', inline=False)
         embed.add_field(name='/queue', value='Shows current queue.', inline=False)
         embed.add_field(name='/now-playing', value='Shows what song is playing now.', inline=False)
-        embed.add_field(name='/control', value='Shows the control board.', inline=False)
+        embed.add_field(name='/control', value='Shows player control menu.', inline=False)
         embed.add_field(name='/loop', value='Enables/Disables Queue/Track loop.', inline=False)
         embed.add_field(name='/shuffle', value='Shuffles next songs in the queue.', inline=False)
         embed.add_field(name='/commands', value='Shows a list of commands.', inline=False)

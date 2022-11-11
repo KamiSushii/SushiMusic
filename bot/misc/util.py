@@ -6,13 +6,6 @@ def thumbnail(id):
     return f'https://i.ytimg.com/vi_webp/{id}/maxresdefault.webp'
 
 @dataclass
-class QueueItem:
-    title: str
-    url: str
-    thumbnail: Union[None, str]
-
-
-@dataclass
 class SongObject:
     """Stores the data needed to play a song or playlist."""
     type: str

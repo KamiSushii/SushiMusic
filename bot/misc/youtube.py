@@ -2,7 +2,7 @@ from abc import ABC
 from asyncio import get_event_loop
 from concurrent.futures import ThreadPoolExecutor
 from typing import Union
-from pytube import Search, Playlist, YouTube
+from pytube import Search, Playlist
 from aiohttp import ClientSession
 from ytmusicapi import YTMusic
 from yt_dlp import YoutubeDL
@@ -50,10 +50,9 @@ class YoutubeWrapper(ABC):
             return None
 
     @staticmethod
-    async def search(query: str) -> Union[SongObject, None]:
+    def search(query: str) -> Union[SongObject, None]:
         """Search video on youtube"""
         
-        print(query)
         try:
             result = Search(query).results[0]
             return SongObject('youtube_track',
@@ -63,7 +62,7 @@ class YoutubeWrapper(ABC):
             return None  
 
     @staticmethod
-    async def search_ytm(query: str) -> Union[SongObject, None]:
+    def search_ytm(query: str) -> Union[SongObject, None]:
         """Searches for video on YouTube Music."""
 
         try:
@@ -73,6 +72,7 @@ class YoutubeWrapper(ABC):
             return SongObject('youtube_track',
                               result.title, result.watch_url, thumbnail(result.video_id))
         except IndexError:
+            print('error')
             return None
 
     @classmethod
@@ -89,7 +89,7 @@ class YoutubeWrapper(ABC):
             await get_event_loop().run_in_executor(ThreadPoolExecutor(), get_playlist_info)
 
         try:
-            playlist_thumbnail = (await cls.search(track_urls[0])).thumbnail
+            playlist_thumbnail = (cls.search(track_urls[0])).thumbnail
         except:
             playlist_thumbnail = 'https://i.ytimg.com/vi_webp/nonexist/maxresdefault.webp'
 

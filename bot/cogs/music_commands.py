@@ -1,13 +1,16 @@
+from concurrent.futures import ThreadPoolExecutor
 from discord.ui import View, Select
 from discord.ext.commands import Cog, Bot
+import discord.utils as utils
 from discord import VoiceClient, VoiceChannel, FFmpegPCMAudio, Interaction, Option, SelectOption, Embed,\
                     ClientException, slash_command, Member, VoiceState
 
-from bot.misc import Config, GuildPlayData, LoopState, QueueItem,\
+from bot.misc import Config, GuildPlayData, LoopState,\
                      SpotifyWrapper, YoutubeWrapper, SongObject
                       
 from typing import Union
 import asyncio
+
 
 
 class MusicCommandsCog(Cog):
@@ -25,6 +28,9 @@ class MusicCommandsCog(Cog):
             
         if vc.is_playing():
             return
+
+        if 'spotify' in song_obj.type:
+            song_obj = YoutubeWrapper.search(song_obj.title)
 
         try:
             vc.play(FFmpegPCMAudio(
@@ -86,6 +92,17 @@ class MusicCommandsCog(Cog):
         if member.id == self.bot.application_id and after.channel is None\
                 and GuildPlayData.get_play_data(member.guild.id) is not None:
             GuildPlayData.remove_play_data(member.guild.id)
+        
+        try:
+            vc = utils.get(self.bot.voice_clients, guild=self.bot.get_guild(before.channel.guild.id))
+
+            if before.channel == vc:
+                await asyncio.sleep(10)
+                if not member.bot and after.channel != vc.channel:
+                    if not [m for m in before.channel.members if not m.bot]:
+                        await vc.disconnect()
+        except:
+            return        
 
     async def spotify_query(self, interaction: Interaction, query: str) -> SongObject:
         if 'track' in query:
@@ -187,7 +204,7 @@ class MusicCommandsCog(Cog):
 
             await interaction.respond(embed=embed)
 
-            play_data.queue.append(QueueItem(song_obj.title, song_obj.url, song_obj.thumbnail))
+            play_data.queue.append(song_obj)
             self.__play_music(vc, song_obj)
 
         else:
@@ -208,7 +225,7 @@ class MusicCommandsCog(Cog):
                     if play_data is None:
                         return
 
-                    play_data.queue.append(QueueItem(video.title, video.url, video.thumbnail))
+                    play_data.queue.append(video)
                     self.__play_music(vc, video)
 
                 await interaction.channel.send('✅ YouTube playlist was fully added to the queue.')
@@ -227,7 +244,7 @@ class MusicCommandsCog(Cog):
                     if play_data is None:
                         return
 
-                    play_data.queue.append(QueueItem(track.title, track.url, track.thumbnail))
+                    play_data.queue.append(track)
                     self.__play_music(vc, track)
 
                 await interaction.channel.send('✅ Spotify album/playlist was fully added to the queue.')

@@ -4,7 +4,7 @@ from discord.ext.commands import Cog, Bot
 from discord.ext.pages import Paginator, PaginatorButton
 from random import shuffle
 
-from bot.misc import Config, GuildPlayData, LoopState, QueueItem, SongObject
+from bot.misc import Config, GuildPlayData, LoopState, SongObject
 
 
 class ControlCommandsCog(Cog):
@@ -143,9 +143,11 @@ class ControlCommandsCog(Cog):
                 color=Config.EMBED_COLOR))
             return
 
+        queue = play_data.queue[play_data.cur_song_pos:]
+
         # splitting the queue into arrays of 15 songs
-        current_song: QueueItem = play_data.queue[0]
-        upcoming_queue = play_data.queue[1:]
+        current_song = queue[0]
+        upcoming_queue = queue[1:]
 
         arrays = []
         while len(upcoming_queue) > 20:
@@ -239,5 +241,5 @@ class ControlCommandsCog(Cog):
         loop.callback = self.loop_command
         shuffle.callback = self.shuffle_command
 
-        view = View(pause, skip, stop, loop, shuffle, timeout=10, disable_on_timeout=True)
+        view = View(pause, skip, stop, loop, shuffle, timeout=30, disable_on_timeout=True)
         await ctx.respond(embed=embed, view=view)

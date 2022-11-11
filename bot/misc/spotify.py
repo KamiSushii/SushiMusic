@@ -55,13 +55,13 @@ class SpotifyWrapper(ABC):
             track_name += ', ' + track_info['artists'][i + 1]['name']
         track_name += ' - ' + track_info['name']
 
-        track = await YoutubeWrapper.search_ytm(track_name)
-        if track is None:
-            track = await YoutubeWrapper.search(track_name)
-            if track is None:
-                return SongObject('track', track_name, None, None)
+        try:
+            track_thumbnail = track_info['album']['images'][0]['url']
+        except:
+            track_thumbnail = 'https://i.ytimg.com/vi_webp/nonexist/maxresdefault.webp'
 
-        return track
+        return SongObject('spotify_track',
+                          track_name, track_info['external_urls']['spotify'], track_thumbnail)
 
     @classmethod
     async def album(cls, url: str) -> SongObject:
@@ -79,12 +79,13 @@ class SpotifyWrapper(ABC):
             track_urls.append(track['external_urls']['spotify'])
 
         try:
-            album_thumbnail = (await cls.track(track_urls[0])).thumbnail
+            album_thumbnail = album_info['images'][0]['url']
         except:
-            playlist_thumbnail = 'https://i.ytimg.com/vi_webp/nonexist/maxresdefault.webp'
+            album_thumbnail = 'https://i.ytimg.com/vi_webp/nonexist/maxresdefault.webp'
 
+        
         return SongObject('spotify_playlist',
-                          album_info['name'], album_info['external_urls']['spotify'], album_thumbnail, track_urls)  
+                          album_info['name'], album_info['external_urls']['spotify'], album_thumbnail, track_urls)
 
     @classmethod
     async def playlist(cls, url: str) -> SongObject:
@@ -92,7 +93,6 @@ class SpotifyWrapper(ABC):
         and saves the remaining track urls of the playlist."""
         playlist_id = cls.__get_id_from_spotify_url(url)
 
-        print("here")
         try:
             playlist_info = await cls.__spotify_client.playlists.get_one(playlist_id)
         except SpotifyAPIError:
@@ -105,9 +105,10 @@ class SpotifyWrapper(ABC):
                 track_urls.append(track['track']['external_urls']['spotify'])
 
         try:
-            playlist_thumbnail = (await cls.track(track_urls[0])).thumbnail
+            playlist_thumbnail = playlist_info['images'][0]['url']
         except:
             playlist_thumbnail = 'https://i.ytimg.com/vi_webp/nonexist/maxresdefault.webp'
+
 
         return SongObject('spotify_playlist',
                           playlist_info['name'], playlist_info['external_urls']['spotify'], playlist_thumbnail, track_urls)  
