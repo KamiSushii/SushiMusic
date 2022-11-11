@@ -76,7 +76,7 @@ Follow [this link](https://developer.spotify.com/dashboard/applications) and cre
 
 ### 7. Change the bot config
 Set the environment variables `TOKEN`, `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`.
-Open `<beat-folder>/bot/misc/config.py` file in any text editor and define there path to FFmpeg executable file and cookies.txt file path.
+Open `<bot-folder>/bot/misc/config.py` file in any text editor and define there path to FFmpeg executable file and cookies.txt file path.
 
 ### 8. Run the bot
 Open terminal in the cloned Beat folder and run the bot:
